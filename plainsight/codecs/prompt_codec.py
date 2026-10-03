@@ -14,9 +14,9 @@ class PromptCodec(Codec):
     def mask(self, secret: str, *, key: SharedKey) -> str:
         system = ENCODE_SYSTEM.format(key=key.passphrase, theme=key.theme,
                                       codebook=render_codebook("encode"))
-        return self._p.complete(system, secret, temperature=0.0)
+        return self._p.complete(system, secret, temperature=None)
 
     def unmask(self, cover: str, *, key: SharedKey) -> str:
         system = DECODE_SYSTEM.format(key=key.passphrase, theme=key.theme,
                                       codebook=render_codebook("decode"))
-        return self._p.complete(system, cover, temperature=0.0)
+        return self._p.complete(system, cover, temperature=None)

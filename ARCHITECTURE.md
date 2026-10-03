@@ -21,8 +21,9 @@ where it plugs in.
 
 - **`LLMProvider`** (`plainsight/providers/base.py`): one method,
   `complete(system, user, *, temperature) -> str`. Swap the *source* of text.
-- **`Codec`** (`plainsight/codecs/base.py`): `mask(secret, *, key, theme) -> cover`
-  and `unmask(cover, *, key, theme) -> secret`. Swap the *method* of masking.
+- **`Codec`** (`plainsight/codecs/base.py`): `mask(secret, *, key) -> cover`
+  and `unmask(cover, *, key) -> secret`. The cover theme travels inside `key`
+  (`key.theme`). Swap the *method* of masking.
 - **`SharedKey`** (`plainsight/key.py`): the shared secret both sides hold. Today
   a passphrase + theme; it already exposes a seeded RNG for future keyed schemes.
 

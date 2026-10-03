@@ -87,7 +87,7 @@ Making the adversary's view visible IS the pitch. Lives in `demo/`.
 ## Stage 4 — Evaluation polish ⬤
 Goal: honest numbers for the deck.
 
-- [ ] Add a results table export (per-case recovery + benign_ok) to `evaluation/`
+- [x] Add a results table export (per-case recovery + benign_ok) to `evaluation/` — `python -m evaluation.export_table out.json --md ... --csv ...` (latest: `evaluation/results.md`)
 - [ ] Add a crude benign-ness proxy beyond trigger words (optional: perplexity or an LLM-judge pass)
 - [ ] Capture the `prompt` vs `keyed` comparison chart for slide 7/8
 
