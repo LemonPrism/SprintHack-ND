@@ -9,7 +9,8 @@ DIU "AI-Enhanced Resilient Communications" track, SprintHack@ND 2026.
 ```bash
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env     # add your ANTHROPIC_API_KEY
+cp .env.example .env     # defaults to local Ollama (free, no API key)
+ollama pull qwen2.5:7b   # one-time; requires Ollama (https://ollama.com)
 
 python -m plainsight.cli mask "Meet at the docks at 2300 Friday." --theme "dinner plans"
 python -m plainsight.cli unmask "<benign message>" --theme "dinner plans"
@@ -19,7 +20,7 @@ python -m plainsight.cli unmask "<benign message>" --theme "dinner plans"
 ```bash
 pytest -q
 python -m evaluation.run_eval --codec mock     # must be 1.00 (harness self-test)
-python -m evaluation.run_eval --codec prompt   # real masking (needs API key)
+python -m evaluation.run_eval --codec prompt   # real masking (local Ollama or API key)
 ```
 
 Fictional test data only. Defensive / anti-censorship PoC.

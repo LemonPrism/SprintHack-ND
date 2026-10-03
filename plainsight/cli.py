@@ -22,6 +22,10 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--codec", default="prompt", choices=["prompt", "keyed", "mock"])
     args = ap.parse_args(argv)
 
+    # Covers can contain emoji; Windows consoles default to cp1252 and would crash.
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
+
     key = SharedKey.from_passphrase(args.key, theme=args.theme)
 
     # mock codec needs no provider; others do.

@@ -34,7 +34,8 @@ Add a class, register it in the factory, done.
 
 | Kind      | Class                  | Status | Notes                                           |
 |-----------|------------------------|--------|-------------------------------------------------|
-| Provider  | `AnthropicProvider`    | live   | cloud; MVP default                              |
+| Provider  | `AnthropicProvider`    | live   | cloud; needs a paid API key                     |
+| Provider  | `OllamaProvider`       | live   | local & free (`qwen2.5:7b`); no API key         |
 | Provider  | `MockProvider`         | live   | canned output; unit-test plumbing only          |
 | Codec     | `PromptCodec`          | live   | Stage 1 — pure-LLM mask/unmask (the MVP)        |
 | Codec     | `ReversibleMockCodec`  | live   | lossless; the harness's self-test               |
@@ -42,8 +43,8 @@ Add a class, register it in the factory, done.
 
 ## Where each long-term feature plugs in
 
-- **On-device local models** → new `OllamaProvider(LLMProvider)` in
-  `providers/`, register in `get_provider`. *No codec changes.* This is why the
+- **On-device local models** → `OllamaProvider(LLMProvider)` in
+  `providers/` (**done** — the PoC runs on it), registered in `get_provider`. *No codec changes.* This is why the
   judge's "pretend it's local" framing costs us nothing — the seam is already there.
 - **Multilingual** → add a `language` field to `SharedKey` and reference it in the
   encode/decode prompts. No interface change.

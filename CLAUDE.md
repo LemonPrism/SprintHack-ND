@@ -92,6 +92,7 @@ plainsight/
 │   ├── providers/       ← WHERE text comes from (swappable)
 │   │   ├── base.py          LLMProvider interface
 │   │   ├── anthropic_provider.py
+│   │   ├── ollama_provider.py    local & free (no API key)
 │   │   └── mock_provider.py
 │   ├── codecs/          ← HOW masking works (swappable)
 │   │   ├── base.py          Codec interface
@@ -100,6 +101,7 @@ plainsight/
 │   │   ├── fields.py             deterministic field extract/pack (Stage 2 core)
 │   │   └── keyed_field_codec.py  Stage 2 — fidelity layer (scaffold + TODO)
 │   └── prompts/         ← encode/decode system prompts (edit these a lot)
+│       └── lexicon.py        shared sensitive->cover word table, rendered into both prompts
 ├── evaluation/          ← the verification harness (our "does it work?" gate)
 │   ├── cases.json           frozen test cases incl. shahed-factory
 │   ├── score.py             field-recovery + benign-ness scoring
@@ -126,7 +128,9 @@ multilingual, pattern-mitigation, etc. later without a rewrite.
 ```bash
 python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-cp .env.example .env            # then paste your ANTHROPIC_API_KEY into .env
+cp .env.example .env            # defaults to the free local Ollama provider
+ollama pull qwen2.5:7b          # one-time model download (~4.7 GB); needs Ollama installed
+# (or set PLAINSIGHT_PROVIDER=anthropic + ANTHROPIC_API_KEY in .env for the cloud model)
 
 # manual round-trip with the real model:
 python -m plainsight.cli mask   "Meet me at the docks at 2300 on Friday." --theme "dinner plans"
@@ -138,7 +142,7 @@ python -m plainsight.cli unmask "<the benign message it printed>"        --theme
 ```bash
 pytest -q                                        # plumbing + deterministic logic, no API key
 python -m evaluation.run_eval --codec mock       # MUST report 100% recovery (proves the harness)
-python -m evaluation.run_eval --codec prompt     # real masking (needs ANTHROPIC_API_KEY)
+python -m evaluation.run_eval --codec prompt     # real masking (local Ollama, or ANTHROPIC_API_KEY)
 ```
 
 - The `mock` codec is lossless by construction; if it is ever < 100%, the
@@ -147,6 +151,8 @@ python -m evaluation.run_eval --codec prompt     # real masking (needs ANTHROPIC
 
 ## Conventions & guardrails
 
+- **Provider:** the team has no paid API key, so the PoC runs on the local
+  `OllamaProvider` (`qwen2.5:7b`). This doubles as the on-device story.
 - **Secrets:** API keys live in `.env` only. Never hard-code or commit them.
   `.env` is git-ignored.
 - **Determinism:** encode/decode run at `temperature=0`. Keep it that way for

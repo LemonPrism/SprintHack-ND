@@ -10,8 +10,8 @@ Legend for effort: ⬤ small (<1h) · ⬤⬤ medium (1–3h) · ⬤⬤⬤ large 
 ## Stage 0 — Setup & alignment ⬤
 Goal: everyone can run the skeleton and the harness.
 
-- [ ] Create `.venv`, `pip install -r requirements.txt`
-- [ ] `cp .env.example .env` and paste a real `ANTHROPIC_API_KEY`
+- [x] Create `.venv`, `pip install -r requirements.txt`
+- [x] `cp .env.example .env` (defaults to local Ollama `qwen2.5:7b` — no API key needed)
 - [ ] Read `CLAUDE.md` threat model + MVP definition out loud as a team
 - [ ] Pick the demo scenario (default: `shahed-factory` in `evaluation/cases.json`)
 
@@ -27,13 +27,14 @@ If the mock run is 1.00, the pipeline and scoring work and you can trust later n
 ## Stage 1 — Core round-trip MVP ⬤⬤  (THIS IS THE GRADED MVP)
 Goal: a real LLM masks a secret into benign text and unmasks it back, usably.
 Files: `plainsight/prompts/encode.py`, `plainsight/prompts/decode.py`,
-`plainsight/codecs/prompt_codec.py`.
+`plainsight/prompts/lexicon.py` (shared cover lexicon), `plainsight/codecs/prompt_codec.py`.
 
-- [ ] Flesh out the encode system prompt (benign, no trigger words, preserve recoverable detail, output only the message)
-- [ ] Flesh out the decode system prompt (recover original, output only the message)
-- [ ] Make `mask` / `unmask` work via the CLI on the `shahed-factory` secret
-- [ ] Iterate prompts until the frozen cases pass the threshold
-- [ ] (easy win) Add a `--theme` cover-domain selector end to end
+- [x] Flesh out the encode system prompt (benign, no trigger words, preserve recoverable detail, output only the message)
+- [x] Flesh out the decode system prompt (recover original, output only the message)
+- [x] Make `mask` / `unmask` work via the CLI on the `shahed-factory` secret
+- [x] Iterate prompts until the frozen cases pass the threshold (100% on `qwen2.5:7b`)
+- [~] (easy win) Add a `--theme` cover-domain selector end to end — wired through, but the 7B model
+  barely varies the cover by theme (lexicon/examples are party-flavoured); needs per-theme examples
 - [ ] (easy win) Bidirectional single prompt: one system prompt, `mode=mask|unmask` — judge called this the "fancy" version
 
 **Acceptance check**
@@ -100,7 +101,7 @@ Goal: honest numbers for the deck.
 ## Long-term backlog (NOT for the hackathon — list these as "future improvements")
 Each maps to an extension point in `ARCHITECTURE.md`. Build order is rough.
 
-- [ ] **On-device local models** — add `OllamaProvider(LLMProvider)`; no other code changes
+- [x] **On-device local models** — `OllamaProvider(LLMProvider)` added (PoC default; free, no API key)
 - [ ] **Bidirectional single model** polish (already partly in Stage 1)
 - [ ] **Multilingual** — add a `language` param threaded through prompts/`SharedKey`
 - [ ] **Pattern / determinism mitigation** — key-seeded RNG so same input ≠ same cover

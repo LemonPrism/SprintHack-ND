@@ -17,13 +17,20 @@ class Settings:
     temperature: float
     anthropic_api_key: str | None
     openai_api_key: str | None
+    ollama_host: str = "http://localhost:11434"
+
+
+# Model used when PLAINSIGHT_MODEL is unset, per provider.
+_DEFAULT_MODELS = {"anthropic": "claude-sonnet-5-5", "ollama": "qwen2.5:7b"}
 
 
 def get_settings() -> Settings:
+    provider = os.getenv("PLAINSIGHT_PROVIDER", "anthropic")
     return Settings(
-        provider=os.getenv("PLAINSIGHT_PROVIDER", "anthropic"),
-        model=os.getenv("PLAINSIGHT_MODEL", "claude-sonnet-5-5"),
+        provider=provider,
+        model=os.getenv("PLAINSIGHT_MODEL") or _DEFAULT_MODELS.get(provider, ""),
         temperature=float(os.getenv("PLAINSIGHT_TEMPERATURE", "0.0")),
         anthropic_api_key=os.getenv("ANTHROPIC_API_KEY"),
         openai_api_key=os.getenv("OPENAI_API_KEY"),
+        ollama_host=os.getenv("OLLAMA_HOST", "http://localhost:11434"),
     )
