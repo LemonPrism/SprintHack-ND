@@ -30,6 +30,7 @@ class OllamaProvider(LLMProvider):
                 {"role": "user", "content": user},
             ],
             "stream": False,
+            "keep_alive": "30m",   # stay loaded between calls (cold load is slow on CPU)
             "options": {"temperature": temp, "seed": self._seed},
         }).encode("utf-8")
         req = urllib.request.Request(self._url, data=body,

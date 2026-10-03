@@ -1,12 +1,21 @@
 # demo/ — Stage 3 UI
 
-The three-pane demo lives here: **sender's real message / intercepted channel view
-(what the adversary sees) / receiver's recovered message**.
+Three panes: **sender's private note / what an eavesdropper sees / receiver's
+recovered note**. The app only calls the `Codec` interface; it does not
+reimplement masking.
 
-Two easy paths:
-- **Streamlit** (`pip install streamlit`, add to requirements), three columns calling
-  `plainsight.codecs.get_codec("prompt", provider)`.
-- **Published HTML artifact** that calls the model API directly (no backend).
+## Run it
+```bash
+# Ollama app running, model pulled: ollama pull qwen2.5:7b
+.venv\Scripts\activate          # Windows (macOS/Linux: source .venv/bin/activate)
+pip install -r requirements.txt
+streamlit run demo/app.py       # opens http://localhost:8501
+```
 
-Keep the UI thin: it should only call the `Codec` interface, never reimplement masking.
-Record a 60–90s capture as a live-demo fallback.
+## Before you present
+1. Open the app and click **Warm up model** in the sidebar (first load is slow on CPU).
+2. Use the **book-swap** preset; it is the case the prompts are tuned for.
+   Expect ~10-20s per live round trip on a laptop CPU once warm.
+3. If the model misbehaves, switch on **Offline replay**. It replays the
+   hand-written covers in `sample_data.json` and labels them as such on screen.
+4. Record a 60-90s screen capture of a good live run as a fallback.
