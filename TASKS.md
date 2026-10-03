@@ -10,10 +10,10 @@ Legend for effort: ⬤ small (<1h) · ⬤⬤ medium (1–3h) · ⬤⬤⬤ large 
 ## Stage 0 — Setup & alignment ⬤
 Goal: everyone can run the skeleton and the harness.
 
-- [ ] Create `.venv`, `pip install -r requirements.txt`
+- [x] Create `.venv`, `pip install -r requirements.txt`
 - [x] `cp .env.example .env` — no API key, so we use a local model: install Ollama, `ollama pull qwen2.5:7b`
 - [ ] Read `CLAUDE.md` threat model + MVP definition out loud as a team
-- [ ] Pick the demo scenario (default: `book-swap` in `evaluation/cases.json`)
+- [x] Pick the demo scenario (default: `book-swap` in `evaluation/cases.json`)
 
 **Acceptance check**
 ```bash
@@ -75,9 +75,9 @@ Show the before/after: `prompt` recovery vs `keyed` recovery on the same cases.
 Goal: three panes — **sender's real message / intercepted channel view / receiver's recovered message**.
 Making the adversary's view visible IS the pitch. Lives in `demo/`.
 
-- [ ] Minimal web UI (Streamlit, or a published HTML artifact calling the API) with the three panes
-- [ ] Theme/persona dropdown wired to `--theme`
-- [ ] A "what an eavesdropper sees" panel that shows only the benign text
+- [x] Minimal web UI (Streamlit, or a published HTML artifact calling the API) with the three panes — `demo/app.py`
+- [x] Theme/persona dropdown wired to `--theme`
+- [x] A "what an eavesdropper sees" panel that shows only the benign text
 - [ ] Record a 60–90s screen capture as a live-demo fallback
 
 **Acceptance check**: a teammate who has never seen it can run the demo and narrate the three panes unaided.

@@ -83,7 +83,7 @@ plainsight/
 ├── ARCHITECTURE.md      ← extension points for every long-term feature
 ├── README.md            ← human quickstart
 ├── requirements.txt
-├── .env.example         ← copy to .env, add your API key
+├── .env.example         ← copy to .env (Ollama default; or add an API key)
 ├── conftest.py          ← puts repo root on sys.path for pytest
 ├── plainsight/          ← the package
 │   ├── config.py        ← settings from env (.env)
@@ -141,7 +141,7 @@ python -m plainsight.cli unmask "<the benign message it printed>"        --theme
 ```bash
 pytest -q                                        # plumbing + deterministic logic, no API key
 python -m evaluation.run_eval --codec mock       # MUST report 100% recovery (proves the harness)
-python -m evaluation.run_eval --codec prompt     # real masking (needs ANTHROPIC_API_KEY)
+python -m evaluation.run_eval --codec prompt     # real masking (Ollama running, or ANTHROPIC_API_KEY)
 ```
 
 - The `mock` codec is lossless by construction; if it is ever < 100%, the
