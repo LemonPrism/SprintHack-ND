@@ -18,10 +18,10 @@ everyday message, sent over an open channel (SMS / WhatsApp / Twitter), and
 usable.
 
 Example:
-- Secret: *"The Shahed drone factory is at 48.4647 N, 35.0462 E. Workday
-  0800–1700. Plant manager is Viktor Orlov. Destroy it Sunday."*
-- Masked: *"Hey! Don't forget Viktor's birthday party Sunday — cake at 8,
-  wrap up by 5. Address is on the group chat."*
+- Secret: *"The book swap is at 41.7056 N, 86.2353 W. Open 0900–1200.
+  Host is Maria Lopez. Bring two paperbacks Saturday."*
+- Masked: *"Hi all! Maria's hosting brunch Saturday — doors at 9, wrap up
+  by noon. Everyone grab two small presents!"*
 - Unmasked → back to the secret.
 
 ## Why (threat model, one paragraph)
@@ -92,6 +92,7 @@ plainsight/
 │   ├── providers/       ← WHERE text comes from (swappable)
 │   │   ├── base.py          LLMProvider interface
 │   │   ├── anthropic_provider.py
+│   │   ├── ollama_provider.py   local model, no API key
 │   │   └── mock_provider.py
 │   ├── codecs/          ← HOW masking works (swappable)
 │   │   ├── base.py          Codec interface
@@ -100,8 +101,9 @@ plainsight/
 │   │   ├── fields.py             deterministic field extract/pack (Stage 2 core)
 │   │   └── keyed_field_codec.py  Stage 2 — fidelity layer (scaffold + TODO)
 │   └── prompts/         ← encode/decode system prompts (edit these a lot)
+│       └── codebook.py      shared word-swap list both prompts use
 ├── evaluation/          ← the verification harness (our "does it work?" gate)
-│   ├── cases.json           frozen test cases incl. shahed-factory
+│   ├── cases.json           frozen test cases incl. book-swap
 │   ├── score.py             field-recovery + benign-ness scoring
 │   └── run_eval.py          `python -m evaluation.run_eval`
 ├── tests/               ← pytest: plumbing + deterministic logic
@@ -126,7 +128,8 @@ multilingual, pattern-mitigation, etc. later without a rewrite.
 ```bash
 python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-cp .env.example .env            # then paste your ANTHROPIC_API_KEY into .env
+cp .env.example .env            # defaults to local Ollama (ollama pull qwen2.5:7b);
+                                # or switch to anthropic + paste ANTHROPIC_API_KEY
 
 # manual round-trip with the real model:
 python -m plainsight.cli mask   "Meet me at the docks at 2300 on Friday." --theme "dinner plans"
@@ -143,7 +146,7 @@ python -m evaluation.run_eval --codec prompt     # real masking (needs ANTHROPIC
 
 - The `mock` codec is lossless by construction; if it is ever < 100%, the
   **harness itself** is broken — fix that before trusting any `prompt` numbers.
-- **Never** commit a change that regresses the `shahed-factory` case.
+- **Never** commit a change that regresses the `book-swap` case.
 
 ## Conventions & guardrails
 

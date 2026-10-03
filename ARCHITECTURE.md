@@ -35,6 +35,7 @@ Add a class, register it in the factory, done.
 | Kind      | Class                  | Status | Notes                                           |
 |-----------|------------------------|--------|-------------------------------------------------|
 | Provider  | `AnthropicProvider`    | live   | cloud; MVP default                              |
+| Provider  | `OllamaProvider`       | live   | local on-device model; no API key (current dev default) |
 | Provider  | `MockProvider`         | live   | canned output; unit-test plumbing only          |
 | Codec     | `PromptCodec`          | live   | Stage 1 — pure-LLM mask/unmask (the MVP)        |
 | Codec     | `ReversibleMockCodec`  | live   | lossless; the harness's self-test               |
@@ -69,16 +70,16 @@ Add a class, register it in the factory, done.
 `evaluation/cases.json` is a list of:
 ```json
 {
-  "id": "shahed-factory",
+  "id": "book-swap",
   "secret": "…the clandestine message…",
-  "must_recover": ["48.4647", "Viktor Orlov", "Sunday"],
-  "trigger_words": ["drone", "destroy", "bomb"]
+  "must_recover": ["41.7056", "Maria Lopez", "Saturday"],
+  "trigger_words": ["book", "swap", "paperback"]
 }
 ```
 - `must_recover`: substrings that MUST reappear in the unmasked output (scores recovery).
 - `trigger_words`: substrings that must NOT appear in the cover (scores benign-ness).
 
-Add cases freely; keep `shahed-factory` as the regression anchor.
+Add cases freely; keep `book-swap` as the regression anchor.
 
 ## Invariants (don't break these)
 1. Callers touch interfaces only — never import a concrete codec/provider directly.

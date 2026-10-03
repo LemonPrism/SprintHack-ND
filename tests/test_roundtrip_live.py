@@ -16,7 +16,7 @@ def test_prompt_codec_live_roundtrip():
 
     key = SharedKey.from_passphrase("sprinthack-demo", theme="dinner plans")
     codec = get_codec("prompt", get_provider(get_settings()))
-    cover = codec.mask("Meet at the north dock at 2300 on Friday.", key=key)
-    assert cover and "dock" not in cover.lower()          # should look benign
+    cover = codec.mask("Meet at the east library entrance at 1930 on Thursday.", key=key)
+    assert cover and "library" not in cover.lower()          # should look benign
     recovered = codec.unmask(cover, key=key)
     assert recovered                                       # should return something
