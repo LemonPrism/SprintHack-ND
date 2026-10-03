@@ -1,0 +1,25 @@
+{
+  "_note": "PLACEHOLDER DEMO DATA. No API key was available, so these covers were hand-written by Claude Code to show what the three-pane demo looks like. They are NOT outputs of the PlainSight pipeline and must not be reported as evaluation results. 'recovered' is simply the secret repeated; real recovery numbers must come from `python -m evaluation.run_eval --codec prompt`.",
+  "theme": "party and gift planning",
+  "key": "sprinthack-demo",
+  "cases": [
+    {
+      "id": "book-swap",
+      "secret": "The book swap is at 41.7056 N, 86.2353 W. Open 0900-1200. Host is Maria Lopez. Bring two paperbacks Saturday.",
+      "cover": "Hi all! Maria Lopez is hosting brunch Saturday 🥐 Doors 9am, wrap up by noon. Gift registry codes are 417056 and 862353. Everyone grab two small presents!",
+      "recovered": "The book swap is at 41.7056 N, 86.2353 W. Open 0900-1200. Host is Maria Lopez. Bring two paperbacks Saturday."
+    },
+    {
+      "id": "study-group",
+      "secret": "Study group meets at the east library entrance. Be there at 1930 on Thursday. Bring the lecture notes.",
+      "cover": "Sam's birthday dinner is by the east entrance of that place downtown, 7:30pm Thursday! Don't forget the card everyone signed 🎂",
+      "recovered": "Study group meets at the east library entrance. Be there at 1930 on Thursday. Bring the lecture notes."
+    },
+    {
+      "id": "road-work",
+      "secret": "Road work on Route 12 started Tuesday. Crews switch at 0700 and 1500. Take the detour.",
+      "cover": "Re: Kat's cake. The new bakery on Route 12 opened Tuesday, but staff swap at 7am and 3pm and the lines are wild. Let's go the long way to the usual spot 🧁",
+      "recovered": "Road work on Route 12 started Tuesday. Crews switch at 0700 and 1500. Take the detour."
+    }
+  ]
+}

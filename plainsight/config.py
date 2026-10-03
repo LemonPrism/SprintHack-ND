@@ -17,6 +17,7 @@ class Settings:
     temperature: float
     anthropic_api_key: str | None
     openai_api_key: str | None
+    ollama_host: str
 
 
 def get_settings() -> Settings:
@@ -26,4 +27,5 @@ def get_settings() -> Settings:
         temperature=float(os.getenv("PLAINSIGHT_TEMPERATURE", "0.0")),
         anthropic_api_key=os.getenv("ANTHROPIC_API_KEY"),
         openai_api_key=os.getenv("OPENAI_API_KEY"),
+        ollama_host=os.getenv("OLLAMA_HOST_URL", "http://localhost:11434"),
     )

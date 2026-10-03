@@ -2,7 +2,7 @@
 from __future__ import annotations
 from .base import Codec
 from ..key import SharedKey
-from ..prompts import ENCODE_SYSTEM, DECODE_SYSTEM
+from ..prompts import ENCODE_SYSTEM, DECODE_SYSTEM, render_codebook
 
 
 class PromptCodec(Codec):
@@ -12,9 +12,11 @@ class PromptCodec(Codec):
         self._p = provider
 
     def mask(self, secret: str, *, key: SharedKey) -> str:
-        system = ENCODE_SYSTEM.format(key=key.passphrase, theme=key.theme)
+        system = ENCODE_SYSTEM.format(key=key.passphrase, theme=key.theme,
+                                      codebook=render_codebook("encode"))
         return self._p.complete(system, secret, temperature=0.0)
 
     def unmask(self, cover: str, *, key: SharedKey) -> str:
-        system = DECODE_SYSTEM.format(key=key.passphrase, theme=key.theme)
+        system = DECODE_SYSTEM.format(key=key.passphrase, theme=key.theme,
+                                      codebook=render_codebook("decode"))
         return self._p.complete(system, cover, temperature=0.0)

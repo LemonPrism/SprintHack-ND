@@ -2,14 +2,14 @@ from plainsight.codecs.fields import extract_fields, pack_fields, unpack_fields
 
 
 def test_extract_coords_and_names():
-    s = "Factory at 48.4647 N, 35.0462 E. Manager Viktor Orlov. Destroy Sunday 0800."
+    s = "Swap at 41.7056 N, 86.2353 W. Host is Maria Lopez. Open Saturday 0900."
     f = extract_fields(s)
-    assert any("48.4647" in c for c in f["coords"])
-    assert "Viktor Orlov" in f["names"]
-    assert "Sunday" in f["days"]
-    assert "0800" in f["times"]
+    assert any("41.7056" in c for c in f["coords"])
+    assert "Maria Lopez" in f["names"]
+    assert "Saturday" in f["days"]
+    assert "0900" in f["times"]
 
 
 def test_pack_unpack_is_lossless():
-    f = {"coords": ["48.4647 N"], "times": ["0800"], "days": ["Sunday"], "names": ["Viktor Orlov"]}
+    f = {"coords": ["41.7056 N"], "times": ["0900"], "days": ["Saturday"], "names": ["Maria Lopez"]}
     assert unpack_fields(pack_fields(f)) == f

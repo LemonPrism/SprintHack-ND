@@ -21,8 +21,14 @@ def get_provider(settings=None) -> LLMProvider:
             model=settings.model,
             temperature=settings.temperature,
         )
+    if name == "ollama":
+        from .ollama_provider import OllamaProvider
+        return OllamaProvider(
+            model=settings.model,
+            host=settings.ollama_host,
+            temperature=settings.temperature,
+        )
     if name == "mock":
         from .mock_provider import MockProvider
         return MockProvider()
-    # To add local models later: elif name == "ollama": from .ollama_provider import ...
     raise ValueError(f"Unknown provider: {name!r}")
