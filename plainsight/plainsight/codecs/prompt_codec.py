@@ -1,0 +1,20 @@
+"""Stage 1 — the MVP. Pure-LLM mask/unmask via the two system prompts."""
+from __future__ import annotations
+from .base import Codec
+from ..key import SharedKey
+from ..prompts import ENCODE_SYSTEM, DECODE_SYSTEM
+
+
+class PromptCodec(Codec):
+    def __init__(self, provider):
+        if provider is None:
+            raise ValueError("PromptCodec needs an LLMProvider.")
+        self._p = provider
+
+    def mask(self, secret: str, *, key: SharedKey) -> str:
+        system = ENCODE_SYSTEM.format(key=key.passphrase, theme=key.theme)
+        return self._p.complete(system, secret, temperature=0.0)
+
+    def unmask(self, cover: str, *, key: SharedKey) -> str:
+        system = DECODE_SYSTEM.format(key=key.passphrase, theme=key.theme)
+        return self._p.complete(system, cover, temperature=0.0)
