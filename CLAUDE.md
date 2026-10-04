@@ -1,6 +1,7 @@
 # CLAUDE.md — PlainSight
 
 > Persistent context for Claude Code. **Read this first in every session.**
+> **Current status / handoff notes live in `README.md` ("Current status").** Read that too.
 > Then read `TASKS.md` (what to build, in order) and `ARCHITECTURE.md`
 > (how to extend it). Keep this file updated as the source of truth.
 
