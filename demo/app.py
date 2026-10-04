@@ -24,7 +24,7 @@ if _ROOT not in sys.path:
 from plainsight.config import get_settings
 from plainsight.key import SharedKey
 from plainsight.providers import get_provider
-from plainsight.codecs import get_codec
+from plainsight.codecs import get_codec, stego
 
 CASES_PATH = os.path.join(_ROOT, "evaluation", "cases.json")
 
@@ -101,9 +101,16 @@ def main() -> None:
             st.info(secret)
         with c2:
             st.subheader("② Open channel sees")
-            st.success(cover)
-            st.caption("What the adversary intercepts. No operational words — "
-                       "it reads like ordinary chatter.")
+            seen = stego.visible(cover)
+            hidden = len(cover) - len(seen)
+            st.success(seen)
+            if hidden:
+                st.caption(f"🔒 What the adversary intercepts. Reads like ordinary "
+                           f"chatter — but {hidden} invisible characters carry the "
+                           f"entire encrypted message, unreadable without the key.")
+            else:
+                st.caption("What the adversary intercepts. No operational words — "
+                           "it reads like ordinary chatter.")
         with c3:
             st.subheader("③ Receiver recovers")
             exact = recovered.strip() == secret.strip()

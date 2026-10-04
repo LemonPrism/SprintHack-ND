@@ -39,7 +39,7 @@ Add a class, register it in the factory, done.
 | Provider  | `MockProvider`         | live   | canned output; unit-test plumbing only          |
 | Codec     | `PromptCodec`          | live   | Stage 1 — pure-LLM mask/unmask (the MVP)        |
 | Codec     | `ReversibleMockCodec`  | live   | lossless; the harness's self-test               |
-| Codec     | `KeyedFieldCodec`      | live   | Stage 2 — lossless, key-dependent fidelity layer |
+| Codec     | `KeyedFieldCodec`      | live   | Stage 2 — lossless, key-dependent; invisible zero-width payload |
 
 ## Where each long-term feature plugs in
 
