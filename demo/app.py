@@ -29,9 +29,11 @@ from plainsight.codecs import get_codec, stego
 
 CASES_PATH = os.path.join(_ROOT, "evaluation", "cases.json")
 
+# keyed first -> it's the demo default: works with any provider (incl. Claude CLI)
+# without refusals, hides the payload invisibly, and recovers losslessly.
 CODEC_LABELS = {
+    "keyed": "Stage 2 · keyed-field (lossless, invisible, key-dependent)",
     "prompt": "Stage 1 · prompt-only (pure LLM, reads fully benign)",
-    "keyed": "Stage 2 · keyed-field (lossless, key-dependent payload)",
 }
 THEMES = [
     "party and gift planning", "dinner plans", "weekend trip planning",
