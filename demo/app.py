@@ -12,7 +12,6 @@ and the shared config/provider — never reimplements masking. Swapping the prov
 from __future__ import annotations
 import dataclasses
 import html
-import json
 import os
 import sys
 
@@ -28,7 +27,22 @@ from plainsight.key import SharedKey
 from plainsight.providers import get_provider
 from plainsight.codecs import get_codec, stego
 
-CASES_PATH = os.path.join(_ROOT, "evaluation", "cases.json")
+# Curated demo secrets. These are rich with exact specifics (coordinates, names,
+# times, proper nouns) to showcase the keyed codec's LOSSLESS recovery — every
+# detail comes back byte-for-byte, and none of it appears in the visible cover.
+# Kept separate from evaluation/cases.json so the frozen eval set stays frozen.
+# Fictional test data only.
+EXAMPLES = {
+    "Shahed drone factory (coords · name · day)":
+        "The Shahed drone factory is at 48.4647 N, 35.0462 E. Workday 0800-1700. "
+        "Plant manager is Viktor Orlov. Destroy it Sunday.",
+    "Source handoff (address · time · day · road)":
+        "The informant will leave the documents at the dead drop behind 14 Market Street "
+        "at 1800 on Saturday. Avoid the checkpoint on Highway 9; guards rotate at 0600.",
+    "Safe-house move (coords · time · day)":
+        "Surveillance on the safe house has increased. Move the handler to the rendezvous "
+        "at 48.8566 N, 2.3522 E before the 2200 curfew on Friday.",
+}
 
 # keyed first -> it's the demo default: works with any provider (incl. Claude CLI)
 # without refusals, hides the payload invisibly, and recovers losslessly.
@@ -50,6 +64,9 @@ PROVIDERS = {
 
 # --- styling -----------------------------------------------------------------
 # Subtle, professional. A slate/indigo palette, quiet surfaces, one accent.
+# Theme-aware: the tokens below define the light look; the prefers-color-scheme
+# block re-defines them for dark mode so the forced surfaces never fight
+# Streamlit's own dark chrome (the old CSS forced white panes under dark text).
 _CSS = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -61,9 +78,37 @@ _CSS = """
   --ps-surface: #ffffff;
   --ps-ground: #f7f8fa;
   --ps-accent: #4f46e5;
+  --ps-accent-soft: rgba(79,70,229,.12);
+  --ps-accent-ring: rgba(79,70,229,.15);
   --ps-ok: #0f9d6b;
   --ps-warn: #c2770b;
   --ps-channel: #b4530f;
+  --ps-shadow: rgba(15,23,42,.04);
+  --ps-chip-ink-bg: #eef1f6;
+  --ps-chip-channel-bg: #fdf0e6;
+  --ps-chip-ok-bg: #e6f6ef;
+  --ps-chip-warn-bg: #fdf3e3;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ps-ink: #e6eaf2;
+    --ps-muted: #96a2b5;
+    --ps-line: #253044;
+    --ps-surface: #141b27;
+    --ps-ground: #0c1118;
+    --ps-accent: #818cf8;
+    --ps-accent-soft: rgba(129,140,248,.18);
+    --ps-accent-ring: rgba(129,140,248,.22);
+    --ps-ok: #34d399;
+    --ps-warn: #fbbf24;
+    --ps-channel: #fb923c;
+    --ps-shadow: rgba(0,0,0,.35);
+    --ps-chip-ink-bg: #1e2635;
+    --ps-chip-channel-bg: #3a2514;
+    --ps-chip-ok-bg: #123024;
+    --ps-chip-warn-bg: #3a2e10;
+  }
 }
 
 html, body, [class*="css"] { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
@@ -74,7 +119,7 @@ html, body, [class*="css"] { font-family: 'Inter', system-ui, -apple-system, san
 .ps-title { font-size: 1.9rem; font-weight: 700; letter-spacing: -0.02em;
   color: var(--ps-ink); margin: 0; display: flex; align-items: center; gap: .55rem; }
 .ps-dot { width: 11px; height: 11px; border-radius: 50%; background: var(--ps-accent);
-  box-shadow: 0 0 0 4px rgba(79,70,229,.15); }
+  box-shadow: 0 0 0 4px var(--ps-accent-ring); }
 .ps-tagline { color: var(--ps-muted); font-size: .95rem; margin: .35rem 0 0;
   max-width: 62ch; line-height: 1.5; }
 .ps-rule { height: 1px; background: var(--ps-line); border: 0; margin: 1.3rem 0 1.5rem; }
@@ -91,8 +136,9 @@ html, body, [class*="css"] { font-family: 'Inter', system-ui, -apple-system, san
 }
 .stTextArea textarea:focus, .stTextInput input:focus {
   border-color: var(--ps-accent) !important;
-  box-shadow: 0 0 0 3px rgba(79,70,229,.12) !important;
+  box-shadow: 0 0 0 3px var(--ps-accent-soft) !important;
 }
+.stTextArea textarea::placeholder { color: var(--ps-muted) !important; opacity: .7; }
 
 /* Primary button */
 .stButton > button {
@@ -113,17 +159,17 @@ section[data-testid="stSidebar"] .stTextInput label { font-weight: 500; }
 /* Result panes */
 .ps-pane { background: var(--ps-surface); border: 1px solid var(--ps-line);
   border-radius: 14px; padding: 1.05rem 1.15rem; height: 100%;
-  box-shadow: 0 1px 2px rgba(15,23,42,.04); }
+  box-shadow: 0 1px 2px var(--ps-shadow); }
 .ps-pane-head { display: flex; align-items: center; justify-content: space-between;
   gap: .5rem; margin-bottom: .7rem; }
 .ps-pane-label { font-size: .82rem; font-weight: 600; color: var(--ps-ink); }
 .ps-pane-label .n { color: var(--ps-muted); font-weight: 700; margin-right: .3rem; }
 .ps-chip { font-size: .68rem; font-weight: 600; letter-spacing: .03em;
   padding: .16rem .5rem; border-radius: 999px; white-space: nowrap; }
-.ps-chip.ink { background: #eef1f6; color: var(--ps-muted); }
-.ps-chip.channel { background: #fdf0e6; color: var(--ps-channel); }
-.ps-chip.ok { background: #e6f6ef; color: var(--ps-ok); }
-.ps-chip.warn { background: #fdf3e3; color: var(--ps-warn); }
+.ps-chip.ink { background: var(--ps-chip-ink-bg); color: var(--ps-muted); }
+.ps-chip.channel { background: var(--ps-chip-channel-bg); color: var(--ps-channel); }
+.ps-chip.ok { background: var(--ps-chip-ok-bg); color: var(--ps-ok); }
+.ps-chip.warn { background: var(--ps-chip-warn-bg); color: var(--ps-warn); }
 .ps-msg { font-size: .95rem; line-height: 1.55; color: var(--ps-ink);
   overflow-wrap: anywhere; }
 .ps-msg.mono { font-family: 'JetBrains Mono', ui-monospace, monospace;
@@ -136,11 +182,7 @@ section[data-testid="stSidebar"] .stTextInput label { font-weight: 500; }
 
 @st.cache_data
 def load_examples() -> dict[str, str]:
-    try:
-        with open(CASES_PATH, encoding="utf-8") as f:
-            return {c["id"]: c["secret"] for c in json.load(f)}
-    except Exception:
-        return {}
+    return dict(EXAMPLES)
 
 
 def pane(col, *, n: str, label: str, chip_class: str, chip_text: str,
