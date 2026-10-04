@@ -24,6 +24,11 @@ COVER_LEXICON: list[tuple[str, str, str]] = [
     ("workday", "workday, operating hours, working hours", "open hours"),
     ("commander", "plant manager, commander, officer in charge", "the host"),
     ("handler", "courier, handler, contact", "our friend"),
+    ("safe house", "safe house, safehouse, hideout", "the apartment"),
+    ("armed man", "armed man, gunman, shooter, armed person", "the entertainer"),
+    ("armed", "armed, carrying a weapon, carrying a gun", "all dressed up"),
+    ("alone", "alone, by yourself, unaccompanied", "solo"),
+    ("password", "password, passcode, code word", "the playlist name"),
 ]
 
 

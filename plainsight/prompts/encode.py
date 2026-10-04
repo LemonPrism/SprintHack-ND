@@ -14,6 +14,10 @@ STEP 1 - Replace sensitive words using this shared lexicon. The words on the lef
 (in any form: plural, verb, -ing) must NEVER appear in your text; write the quoted \
 phrase on the right instead:
 """ + render_encode_lexicon() + """
+The quoted phrases on the right are RESERVED: use each one ONLY for its own \
+left-side word. If the message has a sensitive word that is NOT in this lexicon, \
+do not force it into one of these reserved phrases and do not delete it - keep a \
+plain, ordinary everyday word for it (the decoder will leave such words untouched).
 
 STEP 2 - Carry every specific detail over, using these exact conventions:
 - Coordinates: ONLY if the message contains coordinates, write them as a dropped \
@@ -29,7 +33,9 @@ numbers: copy them exactly, word for word.
 
 STEP 3 - Write it as ONE short, upbeat text (1-3 sentences) about "{theme}", the \
 kind a casual reader scrolls past. No military, security, violent, or secretive \
-words of any kind. Do not add details that are not in the message.
+words of any kind - but never silently drop a sensitive word: either it is mapped \
+in STEP 1, or you keep a plain everyday stand-in word for it (STEP 1 note). Do not \
+add details that are not in the message.
 
 Output ONLY the text message. No quotes, no explanation.
 
