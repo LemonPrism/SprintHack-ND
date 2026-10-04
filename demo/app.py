@@ -23,8 +23,13 @@ from plainsight.key import SharedKey                # noqa: E402
 from plainsight.providers import get_provider       # noqa: E402
 from plainsight.codecs import get_codec             # noqa: E402
 from plainsight.prompts import CODEBOOK             # noqa: E402
+from plainsight.biometric import (                  # noqa: E402
+    FaceVault, FaceNotRecognized, WrongPin, default_vault_path)
 
 SAMPLES_PATH = os.path.join(ROOT, "demo", "sample_data.json")
+os.environ.setdefault("PLAINSIGHT_MODEL_DIR", os.path.join(ROOT, "models"))
+os.environ.setdefault("PLAINSIGHT_FACE_VAULT", os.path.join(ROOT, ".plainsight", "face_vault.json"))
+ENROLL_FRAMES, UNLOCK_FRAMES = 20, 12
 CASES_PATH = os.path.join(ROOT, "evaluation", "cases.json")
 THEMES = ["party and gift planning", "weekend sports chat", "family group text", "dinner plans"]
 CODECS = {
@@ -141,6 +146,30 @@ def load_eval_cases() -> dict:
 
 
 @st.cache_resource
+def load_face_tracker():
+    from plainsight.biometric.face import FaceTracker
+    return FaceTracker()
+
+
+def face_capture(n: int) -> list:
+    """Run the webcam with live landmark tracking until n clear frames are collected."""
+    from plainsight.biometric.face import Camera
+    tracker = load_face_tracker()
+    box = st.container(border=True)
+    box.markdown("**Face key · live tracking**  \n"
+                 "Look at the camera. The box and the five tracked "
+                 "points turn teal on frames clear enough to use.")
+    view, bar = box.empty(), box.progress(0.0, text="Starting camera...")
+
+    def on_frame(img, got, need):
+        view.image(img[:, :, ::-1], width=560)
+        bar.progress(min(got / need, 1.0), text=f"{got}/{need} clear frames")
+
+    with Camera() as cam:
+        return tracker.capture(cam.frames(), n=n, timeout=25, on_frame=on_frame)
+
+
+@st.cache_resource
 def load_provider():
     return get_provider(get_settings())
 
@@ -231,6 +260,32 @@ with st.sidebar:
             st.error(f"Model unavailable: {e}")
     st.caption(f"Model `{settings.model}` via `{settings.provider}`")
 
+    st.markdown("### Face key")
+    vault = FaceVault(default_vault_path())
+    face_unlocked = st.session_state.get("face_vault")
+    if face_unlocked:
+        st.success("Unlocked with your face. The shared key comes from your vault.")
+    elif vault.exists():
+        st.caption("A face is enrolled. Unlock to load the shared key from the vault.")
+    else:
+        st.caption("Lock the shared key behind your face: enroll once, then unlock with the camera.")
+    face_pin = st.text_input("Face PIN (optional)", type="password",
+                             help="Mixed into the key. If set at enrollment, it is needed to unlock.")
+    f1, f2 = st.columns(2)
+    face_action = None
+    if f1.button("Enroll face", use_container_width=True,
+                 help="Captures your face and locks the shared key above in an encrypted vault."):
+        face_action = "enroll"
+    if face_unlocked:
+        if f2.button("Lock", use_container_width=True):
+            st.session_state.pop("face_vault")
+            st.rerun()
+    elif f2.button("Unlock", use_container_width=True, disabled=not vault.exists()):
+        face_action = "unlock"
+
+if st.session_state.get("face_vault"):
+    passphrase = st.session_state["face_vault"].secrets["shared_key"]
+
 mode_pill = ('<span class="ps-dot off"></span><b>Recorded replay</b>' if offline
              else f'<span class="ps-dot"></span><b>Live</b> · {esc(settings.model)}')
 st.markdown(
@@ -240,8 +295,35 @@ st.markdown(
     f'The partner holding the same key gets the note back.</div></div>'
     f'<div class="ps-pills"><span class="ps-pill">{mode_pill}</span>'
     f'<span class="ps-pill">Codec <b>{esc(CODECS[codec_name])}</b></span>'
-    f'<span class="ps-pill">Theme <b>{esc(theme)}</b></span></div></div>',
+    f'<span class="ps-pill">Theme <b>{esc(theme)}</b></span>'
+    + ('<span class="ps-pill">Key <b>🔓 face vault</b></span>' if st.session_state.get("face_vault") else '')
+    + '</div></div>',
     unsafe_allow_html=True)
+
+if flash := st.session_state.pop("face_flash", None):
+    getattr(st, flash[0])(flash[1])
+
+if face_action:
+    try:
+        emb = face_capture(ENROLL_FRAMES if face_action == "enroll" else UNLOCK_FRAMES)
+        need = 10 if face_action == "enroll" else 4
+        if len(emb) < need:
+            st.error(f"Only {len(emb)} clear frames of one face. Face the camera in good light and retry.")
+        elif face_action == "enroll":
+            st.session_state["face_vault"] = vault.enroll(emb, {"shared_key": passphrase}, face_pin)
+            st.session_state["face_flash"] = ("success", f"Face enrolled from {len(emb)} frames. The shared key "
+                                              "is now locked in your face vault, and the vault is unlocked.")
+            st.rerun()
+        else:
+            st.session_state["face_vault"] = vault.unlock(emb, face_pin)
+            st.session_state["face_flash"] = ("success", "Face recognized. Vault unlocked.")
+            st.rerun()
+    except FaceNotRecognized:
+        st.error("Face not recognized. The vault stays locked.")
+    except WrongPin:
+        st.error("Face recognized, but the PIN is wrong. The vault stays locked.")
+    except Exception as e:  # camera missing / busy, models not downloadable
+        st.error(f"Face key unavailable: {e}")
 
 default_text = presets[preset_id]["secret"] if preset_id in presets else ""
 c_text, c_btn = st.columns([5, 1], vertical_alignment="bottom")
@@ -327,6 +409,20 @@ if shown and "recovered" in shown:
                     unsafe_allow_html=True)
 
 st.write("")
+if st.session_state.get("face_vault"):
+    with st.expander("Encrypt or decrypt with your face key", expanded=False):
+        fv = st.session_state["face_vault"]
+        e1, e2 = st.columns(2)
+        plain = e1.text_area("Text to encrypt", key="face_plain", height=100)
+        if e1.button("Encrypt", key="face_enc") and plain.strip():
+            e1.code(fv.encrypt_text(plain), language=None, wrap_lines=True)
+        token = e2.text_area("psf1: token to decrypt", key="face_token", height=100)
+        if e2.button("Decrypt", key="face_dec") and token.strip():
+            try:
+                e2.code(fv.decrypt_text(token), language=None, wrap_lines=True)
+            except ValueError as err:
+                e2.error(str(err))
+
 with st.expander("How it works"):
     st.markdown(
         "- **Mask.** The model rewrites the note as ordinary chat, using a codebook and rules both "
@@ -335,4 +431,8 @@ with st.expander("How it works"):
         "the sensitive terms a filter would look for, and that none of them made it into the cover.\n"
         "- **Unmask.** The receiver runs the same rules in reverse. With the bidirectional codec it is "
         "literally the same system prompt; only the `MODE: MASK` / `MODE: UNMASK` line changes.\n"
+        "- **Face key (optional).** YuNet tracks five facial landmarks; SFace turns the aligned face into a "
+        "128-number embedding. A fuzzy commitment turns that noisy embedding into an exact 128-bit secret, "
+        "which (with an optional PIN) encrypts a local vault holding the shared key. No face image or "
+        "template is stored.\n"
         "- **Fictional data only.** Proof of concept for the DIU AI-Enhanced Resilient Communications track.")

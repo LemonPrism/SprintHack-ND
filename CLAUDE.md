@@ -89,7 +89,9 @@ plainsight/
 ├── plainsight/          ← the package
 │   ├── config.py        ← settings from env (.env)
 │   ├── key.py           ← the shared secret / scheme (SharedKey)
-│   ├── cli.py           ← `python -m plainsight.cli mask|unmask`
+│   ├── cli.py           ← `python -m plainsight.cli mask|unmask` (`--face` pulls the key from the vault)
+│   ├── face_cli.py      ← `python -m plainsight.face_cli track|enroll|unlock|encrypt|decrypt|selftest`
+│   ├── biometric/       ← face key: YuNet+SFace (face.py), fuzzy commitment (fuzzy.py), AES vault (vault.py)
 │   ├── providers/       ← WHERE text comes from (swappable)
 │   │   ├── base.py          LLMProvider interface
 │   │   ├── anthropic_provider.py

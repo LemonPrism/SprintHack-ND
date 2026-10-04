@@ -31,6 +31,11 @@ DIU "AI-Enhanced Resilient Communications" track, SprintHack@ND 2026.
   drop places/topics (e.g. "Route 12" copied from a prompt example) and both got 1705 wrong.
 - Live demo round trip: ~17s warm, ~66s cold.
 
+**Face key (new, optional)** — your face unlocks a local encrypted vault that holds the shared key, and can
+encrypt/decrypt text. See "Face key" below. Verified on unit tests, on a real face photo (detection,
+landmarks, enroll/unlock, wrong PIN) and in the demo app headless. **Not yet run live on the webcam:** do
+`python -m plainsight.face_cli selftest` before relying on it.
+
 **Not done:**
 - **Stage 2** (`KeyedFieldCodec`) — scaffold only.
 - Deck: rehearse it, and swap in a fresh demo screenshot/GIF of the restyled UI if wanted.
@@ -91,13 +96,35 @@ Ollama on Windows: `winget install Ollama.Ollama`, then `ollama pull qwen2.5:7b`
 
 ## Verify
 ```bash
-pytest -q                                        # 7 passed, 1 skipped (live Anthropic test)
+pytest -q                                        # 13 passed, 1 skipped (live Anthropic test)
 python -m evaluation.run_eval --codec mock       # must be 100% (harness self-test)
 python -m evaluation.run_eval --codec prompt     # real masking (Ollama running, or an Anthropic key)
 python -m evaluation.run_eval --codec bidi       # same, with the single bidirectional prompt
 python -m evaluation.run_eval --codec prompt --report out.json
 python -m evaluation.export_table out.json --md evaluation/results.md --csv evaluation/results.csv
 ```
+
+## Face key
+The shared key has to be identical for both partners, so a face cannot *be* that key. Instead your face
+unlocks a local vault (`.plainsight/face_vault.json`, git-ignored) that holds it, so a seized device gives
+up nothing without your face (and optional PIN).
+- **Vision:** OpenCV YuNet tracks the face and 5 landmarks; SFace turns the aligned face into a 128-d
+  embedding. Models download once into `models/` (git-ignored) and are SHA-256 pinned.
+- **Key:** a fuzzy commitment (`plainsight/biometric/fuzzy.py`) turns the noisy embedding into an exact
+  128-bit secret; scrypt(secret + PIN) → AES-256-GCM. No face image, embedding or template is stored.
+  Tuned in simulation: similarity ≥ 0.7 unlocks ~97%, ≤ 0.4 unlocks ~0%.
+- **Limits:** no liveness check (a good photo of you could unlock it); under coercion a face is easy to
+  compel, so set a PIN; repetition-code helper data leaks some bits; first-try unlock rate under different
+  lighting is not yet measured.
+```bash
+python -m plainsight.face_cli selftest [--impostor someone_else.jpg]   # live end-to-end check, throwaway vault
+python -m plainsight.face_cli track                                    # live landmark tracking, q to quit
+python -m plainsight.face_cli enroll --shared-key sprinthack-demo [--pin 1234]
+python -m plainsight.face_cli unlock --show | encrypt "text" | decrypt psf1:...
+python -m plainsight.cli mask "secret" --face --codec bidi              # shared key from the vault
+```
+In the demo app: sidebar → **Face key** → Enroll face / Unlock (live tracking view), then an
+encrypt/decrypt panel appears.
 
 ## Live demo
 ```bash
@@ -109,7 +136,7 @@ See `demo/README.md` for the full checklist.
 
 ## Repo layout (top level)
 ```
-plainsight/   the package (providers, codecs, prompts, key, config, cli)
+plainsight/   the package (providers, codecs, prompts, key, config, cli, biometric/ face key, face_cli)
 evaluation/   frozen cases, scorer, run_eval, export_table, latest results
 tests/        pytest (no network needed)
 demo/         Streamlit app, sample data, fallback GIF

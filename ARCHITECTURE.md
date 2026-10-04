@@ -67,6 +67,14 @@ Add a class, register it in the factory, done.
   `NeuralStegoCodec(Codec)` that needs a provider exposing token log-probs; add
   that capability to a provider subclass. Mention in the deck as "known alternative."
 
+## Face key (sits beside the seams, not in them)
+
+`plainsight/biometric/` never touches `Codec` or `LLMProvider`. It only decides *where the shared
+passphrase comes from*: `FaceVault.unlock(embeddings, pin).secrets["shared_key"]` feeds
+`SharedKey.from_passphrase`. Swap the face model in `face.py` or the error-correcting code in
+`fuzzy.py` without changing callers. Invariant: the vault file never holds a face image, embedding,
+or the secret itself; only helper data, salts and AES-GCM ciphertext.
+
 ## Data contract for the eval harness
 
 `evaluation/cases.json` is a list of:
