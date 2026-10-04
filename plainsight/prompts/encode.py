@@ -15,9 +15,12 @@ STEP 1 - Replace sensitive words using this shared lexicon. The words on the lef
 phrase on the right instead:
 """ + render_encode_lexicon() + """
 The quoted phrases on the right are RESERVED: use each one ONLY for its own \
-left-side word. If the message has a sensitive word that is NOT in this lexicon, \
-do not force it into one of these reserved phrases and do not delete it - keep a \
-plain, ordinary everyday word for it (the decoder will leave such words untouched).
+left-side word, never for anything else. If the message has a sensitive word that \
+is NOT in this lexicon, do NOT force it into a reserved phrase; instead soften it \
+into an innocent, theme-appropriate everyday word so the text still reads as pure \
+chatter. A benign-looking surface is the top priority: a softened word loses that \
+nuance on recovery, which is acceptable - leaking a sensitive word into the cover \
+is not.
 
 STEP 2 - Carry every specific detail over, using these exact conventions:
 - Coordinates: ONLY if the message contains coordinates, write them as a dropped \
@@ -32,10 +35,10 @@ exactly: on-the-hour times have no minutes (0900 -> "9am", 1500 -> "3pm", \
 numbers: copy them exactly, word for word.
 
 STEP 3 - Write it as ONE short, upbeat text (1-3 sentences) about "{theme}", the \
-kind a casual reader scrolls past. No military, security, violent, or secretive \
-words of any kind - but never silently drop a sensitive word: either it is mapped \
-in STEP 1, or you keep a plain everyday stand-in word for it (STEP 1 note). Do not \
-add details that are not in the message.
+kind a casual reader scrolls past. It must contain NO military, security, violent, \
+alarming, or secretive words of any kind - if a word like that is not mapped in \
+STEP 1, soften it (STEP 1 note) rather than let it appear. Do not add details that \
+are not in the message.
 
 Output ONLY the text message. No quotes, no explanation.
 
