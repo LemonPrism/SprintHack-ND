@@ -78,7 +78,7 @@ Making the adversary's view visible IS the pitch. Lives in `demo/`.
 - [x] Minimal web UI (Streamlit, or a published HTML artifact calling the API) with the three panes — `demo/app.py`
 - [x] Theme/persona dropdown wired to `--theme`
 - [x] A "what an eavesdropper sees" panel that shows only the benign text
-- [ ] Record a 60–90s screen capture as a live-demo fallback
+- [x] Record a 60–90s screen capture as a live-demo fallback — `demo/demo-fallback.gif`
 
 **Acceptance check**: a teammate who has never seen it can run the demo and narrate the three panes unaided.
 

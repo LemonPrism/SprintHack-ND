@@ -18,4 +18,4 @@ streamlit run demo/app.py       # opens http://localhost:8501
    Expect ~10-20s per live round trip on a laptop CPU once warm.
 3. If the model misbehaves, switch on **Offline replay**. It replays the
    hand-written covers in `sample_data.json` and labels them as such on screen.
-4. Record a 60-90s screen capture of a good live run as a fallback.
+4. Fallback recording of a real live run (book-swap, 17.2s round trip): `demo/demo-fallback.gif`.
