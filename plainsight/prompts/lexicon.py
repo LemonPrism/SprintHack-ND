@@ -29,6 +29,38 @@ COVER_LEXICON: list[tuple[str, str, str]] = [
     ("armed", "armed, carrying a weapon, carrying a gun", "all dressed up"),
     ("alone", "alone, by yourself, unaccompanied", "solo"),
     ("password", "password, passcode, code word", "the playlist name"),
+
+    # --- common threat-report terms (Stage 1 batch) ---------------------------
+    # Distinct, multi-word cover phrases so the decoder won't fire on an ordinary
+    # word (e.g. a bare "grab"). All theme-neutral enough for party/dinner/trip covers.
+    ("target", "the target, the objective, the mark", "the guest of honor"),
+    ("sniper", "sniper, marksman", "the photographer"),
+    ("explosion", "explosion, blast, detonation", "the light show"),
+    ("bomb", "bomb, IED, explosive device", "the pinata"),
+    ("explosives", "explosives, ammunition, ammo, rounds", "the party supplies"),
+    ("gunfire", "gunfire, shots fired, shooting", "the fireworks"),
+    ("ambush", "ambush, ambushed", "the welcome party"),
+    ("raid", "raid, raided, storming", "the big cleanup"),
+    ("surveillance", "surveillance, recon, reconnaissance, scouting", "people-watching"),
+    ("evacuate", "evacuate, evacuation, pull out", "wrap up and leave"),
+    ("retreat", "retreat, fall back, withdraw", "call it a night"),
+    ("advance", "advance, move in, move up", "swing by early"),
+    ("detain", "detain, arrest, take into custody", "do a headcount"),
+    ("kidnap", "kidnap, kidnapping, abduct, abduction", "the surprise pickup"),
+    ("smuggle", "smuggle, smuggling, traffic", "sneak in snacks"),
+    ("convoy", "convoy, motorcade", "the carpool"),
+    ("border crossing", "border crossing, the border", "the county line"),
+    ("tunnel", "tunnel, underground passage", "the back shortcut"),
+    ("cache", "cache, stockpile, stash, arms cache", "the snack stash"),
+    ("compound", "compound, base camp", "the cabin"),
+    ("lockdown", "lockdown", "a quiet night in"),
+    ("curfew", "curfew", "an early bedtime"),
+    ("informant", "informant, snitch, mole, inside asset", "the party planner"),
+    ("casualties", "casualties, casualty, wounded, injured", "tired guests"),
+    ("dead drop", "dead drop, drop site", "the mailbox"),
+    ("rendezvous", "rendezvous, meeting point", "the usual hangout"),
+    ("hostiles", "hostile, hostiles, enemy, adversary", "the other team"),
+    ("reinforcements", "reinforcements, backup", "extra hands"),
 ]
 
 
