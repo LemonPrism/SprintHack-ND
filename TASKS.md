@@ -53,10 +53,10 @@ exact failure the judge predicted ("it gets awkward very quick") — beating it 
 the pitch.
 Files: `plainsight/codecs/fields.py` (core exists), `plainsight/codecs/keyed_field_codec.py` (TODO).
 
-- [ ] Extend `fields.extract_fields` to reliably catch coords / times / dates / names in the cases
-- [ ] Implement `KeyedFieldCodec.mask`: extract fields → `pack_fields` → prompt LLM to weave the packed payload into benign `theme` cover
-- [ ] Implement `KeyedFieldCodec.unmask`: pull the payload back out → `unpack_fields` → rebuild the exact secret
-- [ ] Make the payload disguise key-dependent (use `SharedKey` to seed how fields are hidden)
+- [x] Extend `fields.extract_fields` to catch coords / times / dates / names / places in the cases
+- [x] Implement `KeyedFieldCodec.mask`: pack secret+fields → key-disguise → embed in benign LLM cover
+- [x] Implement `KeyedFieldCodec.unmask`: pull payload → undisguise → rebuild the exact secret (lossless)
+- [x] Make the payload disguise key-dependent (SHA-256 keystream from `key.passphrase`; wrong key → garbage)
 
 **Acceptance check**
 ```bash

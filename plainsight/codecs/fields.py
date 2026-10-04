@@ -16,6 +16,13 @@ _CLOCK = re.compile(r"\b\d{1,2}:\d{2}\b|(?<![\d.])\b\d{3,4}\b")  # 23:00 or 2300
 _DAY = re.compile(r"\b(?:Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day\b", re.IGNORECASE)
 # A run of 2+ Titlecase words; we then trim leading role/verb words.
 _NAME_RUN = re.compile(r"\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+)+\b")
+# Places: numbered roads ("Highway 7", "Route 12") and compass landmarks
+# ("north dock", "east bridge"). Enough to surface the places the cases care about.
+_PLACE = re.compile(
+    r"\b(?:Highway|Hwy|Route|Rte|Interstate)\s+\d+\b"
+    r"|\b(?:north|south|east|west)\s+(?:dock|pier|gate|bridge|station|entrance)\b",
+    re.IGNORECASE,
+)
 
 # Words that often precede a name or start a sentence but are not part of it.
 _NAME_STOPWORDS = {
@@ -43,6 +50,7 @@ def extract_fields(text: str) -> dict[str, list[str]]:
         "times": _CLOCK.findall(text),
         "days": [m.group(0) for m in _DAY.finditer(text)],
         "names": names,
+        "places": [m.group(0) for m in _PLACE.finditer(text)],
     }
 
 
