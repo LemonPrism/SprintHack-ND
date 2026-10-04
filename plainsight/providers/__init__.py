@@ -21,6 +21,9 @@ def get_provider(settings=None) -> LLMProvider:
             model=settings.model,
             temperature=settings.temperature,
         )
+    if name == "claude-cli":
+        from .claude_cli_provider import ClaudeCliProvider
+        return ClaudeCliProvider(model=settings.model, binary=settings.claude_bin)
     if name == "ollama":
         from .ollama_provider import OllamaProvider
         return OllamaProvider(

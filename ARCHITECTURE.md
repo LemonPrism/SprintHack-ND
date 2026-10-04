@@ -36,6 +36,7 @@ Add a class, register it in the factory, done.
 |-----------|------------------------|--------|-------------------------------------------------|
 | Provider  | `AnthropicProvider`    | live   | cloud; needs a paid API key                     |
 | Provider  | `OllamaProvider`       | live   | local & free (`qwen2.5:7b`); no API key         |
+| Provider  | `ClaudeCliProvider`    | live   | Claude via `claude -p` (subscription); no API key |
 | Provider  | `MockProvider`         | live   | canned output; unit-test plumbing only          |
 | Codec     | `PromptCodec`          | live   | Stage 1 — pure-LLM mask/unmask (the MVP)        |
 | Codec     | `ReversibleMockCodec`  | live   | lossless; the harness's self-test               |

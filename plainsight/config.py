@@ -18,10 +18,15 @@ class Settings:
     anthropic_api_key: str | None
     openai_api_key: str | None
     ollama_host: str = "http://localhost:11434"
+    claude_bin: str | None = None   # path to the `claude` CLI (claude-cli provider)
 
 
 # Model used when PLAINSIGHT_MODEL is unset, per provider.
-_DEFAULT_MODELS = {"anthropic": "claude-sonnet-5-5", "ollama": "qwen2.5:7b"}
+_DEFAULT_MODELS = {
+    "anthropic": "claude-sonnet-5-5",
+    "ollama": "qwen2.5:7b",
+    "claude-cli": "sonnet",   # CLI model alias (e.g. opus / sonnet)
+}
 
 
 def get_settings() -> Settings:
@@ -33,4 +38,5 @@ def get_settings() -> Settings:
         anthropic_api_key=os.getenv("ANTHROPIC_API_KEY"),
         openai_api_key=os.getenv("OPENAI_API_KEY"),
         ollama_host=os.getenv("OLLAMA_HOST", "http://localhost:11434"),
+        claude_bin=os.getenv("PLAINSIGHT_CLAUDE_BIN"),
     )

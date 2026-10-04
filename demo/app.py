@@ -10,6 +10,7 @@ and the shared config/provider — never reimplements masking. Swapping the prov
 (cloud vs local) or codec (prompt vs keyed) happens entirely through those seams.
 """
 from __future__ import annotations
+import dataclasses
 import json
 import os
 import sys
@@ -36,6 +37,12 @@ THEMES = [
     "party and gift planning", "dinner plans", "weekend trip planning",
     "family logistics", "book club",
 ]
+# Provider options selectable in the demo (label -> (provider, default model)).
+PROVIDERS = {
+    "Claude (CLI, no API key)": ("claude-cli", "sonnet"),
+    "Local 7B (Ollama)": ("ollama", "qwen2.5:7b"),
+    "From .env": (None, None),
+}
 
 
 @st.cache_data
@@ -58,7 +65,11 @@ def main() -> None:
 
     with st.sidebar:
         st.header("Setup")
-        st.write(f"**Provider:** `{settings.provider}`  \n**Model:** `{settings.model}`")
+        prov_label = st.selectbox("Model / provider", list(PROVIDERS))
+        prov_name, prov_model = PROVIDERS[prov_label]
+        if prov_name:
+            settings = dataclasses.replace(settings, provider=prov_name, model=prov_model)
+        st.caption(f"Using provider `{settings.provider}` · model `{settings.model}`")
         codec_name = st.radio("Codec", list(CODEC_LABELS), format_func=CODEC_LABELS.get)
         theme = st.selectbox("Cover theme / persona", THEMES)
         st.divider()

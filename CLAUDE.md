@@ -93,6 +93,7 @@ plainsight/
 │   │   ├── base.py          LLMProvider interface
 │   │   ├── anthropic_provider.py
 │   │   ├── ollama_provider.py    local & free (no API key)
+│   │   ├── claude_cli_provider.py Claude via `claude -p` (subscription, no API key)
 │   │   └── mock_provider.py
 │   ├── codecs/          ← HOW masking works (swappable)
 │   │   ├── base.py          Codec interface
