@@ -16,6 +16,10 @@ streamlit run demo/app.py       # opens http://localhost:8501
 1. Open the app and click **Warm up model** in the sidebar (first load is slow on CPU).
 2. Use the **book-swap** preset; it is the case the prompts are tuned for.
    Expect ~10-20s per live round trip on a laptop CPU once warm.
-3. If the model misbehaves, switch on **Offline replay**. It replays the
-   hand-written covers in `sample_data.json` and labels them as such on screen.
-4. Fallback recording of a real live run (book-swap, 17.2s round trip): `demo/demo-fallback.gif`.
+3. If the model misbehaves, switch on **Recorded replay**. It replays real
+   qwen2.5:7b output recorded from the eval run (`sample_data.json`, for both
+   codecs, theme "party and gift planning") and labels it as recorded on screen.
+4. Fallback recording of a real live run (book-swap, 17.2s round trip): `demo/demo-fallback.gif`
+   (recorded before the restyle, so it shows the old look).
+5. The **Codec** switch in the sidebar picks the single bidirectional prompt (default) or the
+   two-prompt baseline. Run from the repo root so `.streamlit/config.toml` (the dark theme) loads.

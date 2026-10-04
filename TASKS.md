@@ -39,7 +39,10 @@ Files: `plainsight/prompts/encode.py`, `plainsight/prompts/decode.py`,
     check — topic words missing from the codebook leak through, and the model sometimes
     rounds times (1705 -> 5pm) or mangles numbered places. Stage 2 targets exactly this.
 - [x] (easy win) Add a `--theme` cover-domain selector end to end (CLI + eval `--theme`, threaded into both prompts)
-- [ ] (easy win) Bidirectional single prompt: one system prompt, `mode=mask|unmask` — judge called this the "fancy" version
+- [x] (easy win) Bidirectional single prompt: one system prompt, `mode=mask|unmask` — judge called this the "fancy" version
+  - `--codec bidi` (`plainsight/prompts/bidirectional.py`, `codecs/bidi_prompt_codec.py`): identical system prompt both
+    ways, `MODE: MASK|UNMASK` in the user turn. Frozen cases 100% / 3/3 benign, deterministic. On 3 new unseen
+    messages: 92% recovery and 3/3 benign (two-prompt baseline: 92%, 2/3 benign). Both still drift on places/topics.
 
 **Acceptance check**
 ```bash
@@ -78,7 +81,8 @@ Making the adversary's view visible IS the pitch. Lives in `demo/`.
 - [x] Minimal web UI (Streamlit, or a published HTML artifact calling the API) with the three panes — `demo/app.py`
 - [x] Theme/persona dropdown wired to `--theme`
 - [x] A "what an eavesdropper sees" panel that shows only the benign text
-- [x] Record a 60–90s screen capture as a live-demo fallback — `demo/demo-fallback.gif`
+- [x] Record a 60–90s screen capture as a live-demo fallback — `demo/demo-fallback.gif` (shows the pre-restyle UI)
+- [x] Visual restyle: dark theme, chat-bubble intercept view, keyword-scan and exact-detail check chips, codec switch
 
 **Acceptance check**: a teammate who has never seen it can run the demo and narrate the three panes unaided.
 
@@ -96,8 +100,8 @@ Goal: honest numbers for the deck.
 ---
 
 ## Stage 5 — Deck & rehearse ⬤⬤
-- [ ] Slides per the structure in the project notes (problem → why today fails → idea → how → demo → the hard part we solved → benign check → feasibility → limits → roadmap → vision)
-- [ ] Open with the Afghan evacuation / Green Revolution framing (the judge's own stories)
+- [x] Slides per the structure in the project notes (problem → why today fails → idea → how → demo → the hard part we solved → benign check → feasibility → limits → roadmap → vision)
+- [x] Open with the Afghan evacuation / Green Revolution framing (the judge's own stories) — draft in `deck/PlainSight.pptx`; speaker notes on every slide
 - [ ] Rehearse with the recorded fallback ready
 
 ---

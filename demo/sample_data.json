@@ -1,25 +1,50 @@
 {
-  "_note": "PLACEHOLDER DEMO DATA. No API key was available, so these covers were hand-written by Claude Code to show what the three-pane demo looks like. They are NOT outputs of the PlainSight pipeline and must not be reported as evaluation results. 'recovered' is simply the secret repeated; real recovery numbers must come from `python -m evaluation.run_eval --codec prompt`.",
+  "_note": "RECORDED REAL MODEL OUTPUT for the offline-replay fallback. Captured 2026-10-03 with qwen2.5:7b via Ollama, temperature 0, theme 'party and gift planning', key 'sprinthack-demo', from `python -m evaluation.run_eval --codec <prompt|bidi> --report`. Replay is only faithful for that theme and key.",
+  "model": "qwen2.5:7b (Ollama)",
   "theme": "party and gift planning",
   "key": "sprinthack-demo",
   "cases": [
     {
       "id": "book-swap",
       "secret": "The book swap is at 41.7056 N, 86.2353 W. Open 0900-1200. Host is Maria Lopez. Bring two paperbacks Saturday.",
-      "cover": "Hi all! Maria Lopez is hosting brunch Saturday 🥐 Doors 9am, wrap up by noon. Gift registry codes are 417056 and 862353. Everyone grab two small presents!",
-      "recovered": "The book swap is at 41.7056 N, 86.2353 W. Open 0900-1200. Host is Maria Lopez. Bring two paperbacks Saturday."
+      "recorded": {
+        "prompt": {
+          "cover": "Brunch at the new café, gift codes 41-7056N and 86-2353W! Open 9am-12pm. Host is Maria Lopez. Bring two cupcakes Saturday.",
+          "recovered": "Book swap at the road work, gift codes 41.7056 N and 86.2353 W. Open 0900-1200. Host is Maria Lopez. Bring two paperbacks Saturday."
+        },
+        "bidi": {
+          "cover": "The brunch is at gift code 41-7056N and 86-2353W. Open 9am-12pm. Birthday girl is Maria Lopez. Bring two cupcakes Saturday.",
+          "recovered": "The book swap is at 41.7056 N and 86.2353 W. Open 0900-1200. Host is Maria Lopez. Bring two paperbacks Saturday."
+        }
+      }
     },
     {
       "id": "study-group",
       "secret": "Study group meets at the east library entrance. Be there at 1930 on Thursday. Bring the lecture notes.",
-      "cover": "Sam's birthday dinner is by the east entrance of that place downtown, 7:30pm Thursday! Don't forget the card everyone signed 🎂",
-      "recovered": "Study group meets at the east library entrance. Be there at 1930 on Thursday. Bring the lecture notes."
+      "recorded": {
+        "prompt": {
+          "cover": "Game night at the east bakery entrance. Be there at 7:30pm Thursday. Bring the playlist.",
+          "recovered": "Study group at the east library entrance. Be there at 1930 on Thursday. Bring the lecture notes."
+        },
+        "bidi": {
+          "cover": "Game night at the east bakery entrance. Be there at 7:30pm on Thursday. Bring the playlist.",
+          "recovered": "Study group at the east library entrance. Be there at 1930 on Thursday. Bring the lecture notes."
+        }
+      }
     },
     {
       "id": "road-work",
       "secret": "Road work on Route 12 started Tuesday. Crews switch at 0700 and 1500. Take the detour.",
-      "cover": "Re: Kat's cake. The new bakery on Route 12 opened Tuesday, but staff swap at 7am and 3pm and the lines are wild. Let's go the long way to the usual spot 🧁",
-      "recovered": "Road work on Route 12 started Tuesday. Crews switch at 0700 and 1500. Take the detour."
+      "recorded": {
+        "prompt": {
+          "cover": "The new café on Route 12 opened Tuesday. Staff swap shifts at 7am and 3pm. Take the long way.",
+          "recovered": "Road work on Route 12 started Tuesday. Crews switch shifts at 0700 and 1500. Take the detour."
+        },
+        "bidi": {
+          "cover": "The new café on Route 12 opened Tuesday. Staff swap shifts at 7am and 3pm. Take the long way.",
+          "recovered": "Road work on Route 12 started Tuesday. Crews switch shifts at 0700 and 1500. Take the detour."
+        }
+      }
     }
   ]
 }

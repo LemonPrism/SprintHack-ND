@@ -19,7 +19,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("text", help="the message to mask or unmask")
     ap.add_argument("--theme", default="everyday chat", help="cover theme / persona")
     ap.add_argument("--key", default="sprinthack-demo", help="shared passphrase")
-    ap.add_argument("--codec", default="prompt", choices=["prompt", "keyed", "mock"])
+    ap.add_argument("--codec", default="prompt", choices=["prompt", "bidi", "keyed", "mock"])
     args = ap.parse_args(argv)
 
     key = SharedKey.from_passphrase(args.key, theme=args.theme)

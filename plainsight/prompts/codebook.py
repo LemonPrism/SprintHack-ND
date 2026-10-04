@@ -33,8 +33,10 @@ CODEBOOK: dict[str, str] = {
 
 
 def render_codebook(direction: str) -> str:
-    """Format the codebook as prompt lines. direction='encode' or 'decode'."""
+    """Format the codebook as prompt lines. direction='encode', 'decode' or 'both'."""
     pairs = sorted(CODEBOOK.items(), key=lambda kv: -len(kv[0]))
     if direction == "encode":
         return "\n".join(f'- "{real}" -> "{cover}"' for real, cover in pairs)
+    if direction == "both":
+        return "\n".join(f'- "{real}" <-> "{cover}"' for real, cover in pairs)
     return "\n".join(f'- "{cover}" -> "{real}"' for real, cover in pairs)

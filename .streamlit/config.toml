@@ -1,0 +1,11 @@
+# Demo theme (read when you run `streamlit run demo/app.py` from the repo root).
+[theme]
+base = "dark"
+primaryColor = "#2DD4A7"
+backgroundColor = "#0A0F1C"
+secondaryBackgroundColor = "#111827"
+textColor = "#E8ECF4"
+font = "sans serif"
+
+[browser]
+gatherUsageStats = false

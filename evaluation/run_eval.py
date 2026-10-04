@@ -53,7 +53,7 @@ def _print(results: list[CaseResult]) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="run_eval")
-    ap.add_argument("--codec", default="prompt", choices=["prompt", "keyed", "mock"])
+    ap.add_argument("--codec", default="prompt", choices=["prompt", "bidi", "keyed", "mock"])
     ap.add_argument("--theme", default="party and gift planning")
     ap.add_argument("--key", default="sprinthack-demo")
     ap.add_argument("--min-recovery", type=float, default=0.90)
