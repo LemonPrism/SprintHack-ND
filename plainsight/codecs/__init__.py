@@ -8,9 +8,6 @@ def get_codec(name: str, provider=None) -> Codec:
     if name == "prompt":
         from .prompt_codec import PromptCodec
         return PromptCodec(provider)
-    if name == "bidi":
-        from .bidi_prompt_codec import BidiPromptCodec
-        return BidiPromptCodec(provider)
     if name == "mock":
         from .reversible_mock_codec import ReversibleMockCodec
         return ReversibleMockCodec()

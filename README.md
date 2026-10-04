@@ -8,16 +8,16 @@ DIU "AI-Enhanced Resilient Communications" track, SprintHack@ND 2026.
 
 ---
 
-## Current status (handoff, 2026-10-03, second round)
+## Current status (handoff, 2026-10-03)
 
 | Stage | Status | Where |
 |---|---|---|
 | 0 — Setup | ✅ done | `.venv`, `.env` (git-ignored), Ollama |
-| 1 — Core round-trip MVP (graded) | ✅ passing, incl. bidirectional single prompt | `plainsight/prompts/`, `plainsight/codecs/prompt_codec.py`, `bidi_prompt_codec.py` |
+| 1 — Core round-trip MVP (graded) | ✅ passing | `plainsight/prompts/`, `plainsight/codecs/prompt_codec.py` |
 | 2 — Fidelity layer (`KeyedFieldCodec`) | ❌ not started (scaffold only) | `plainsight/codecs/keyed_field_codec.py` |
-| 3 — Demo UI | ✅ done and restyled; fallback GIF shows the old look | `demo/app.py`, `.streamlit/config.toml` |
+| 3 — Demo UI | ✅ done, incl. fallback recording | `demo/app.py`, `demo/demo-fallback.gif` |
 | 4 — Evaluation polish | 🟡 results-table export done; extra benign proxy and prompt-vs-keyed chart not done | `evaluation/export_table.py`, `evaluation/results.md` |
-| 5 — Deck & rehearse | 🟡 deck drafted (12 slides, speaker notes); rehearsal not done | `deck/PlainSight.pptx` |
+| 5 — Deck & rehearse | ❌ not started | — |
 
 **Latest numbers** (`qwen2.5:7b` on a laptop CPU via Ollama, temperature 0):
 - `python -m evaluation.run_eval --codec prompt` → **100% field recovery, 3/3 covers benign, PASS**
@@ -26,31 +26,15 @@ DIU "AI-Enhanced Resilient Communications" track, SprintHack@ND 2026.
   — topic words missing from the codebook leak into the cover, and the model sometimes rounds
   times (1705 → 5pm). The book-swap decode also invents a place ("road work") that the scorer
   doesn't check. Details in `TASKS.md` (Stage 1).
-- `--codec bidi` (one system prompt, `MODE:` line) → **100%, 3/3 benign, PASS**, deterministic.
-  On 3 new unseen messages: bidi 92% / 3 of 3 benign vs two-prompt 92% / 2 of 3 benign. Both still invent or
-  drop places/topics (e.g. "Route 12" copied from a prompt example) and both got 1705 wrong.
 - Live demo round trip: ~17s warm, ~66s cold.
 
-**Face key (new, optional)** — your face unlocks a local encrypted vault that holds the shared key, and can
-encrypt/decrypt text. See "Face key" below. Verified on unit tests, on a real face photo (detection,
-landmarks, enroll/unlock, wrong PIN) and in the demo app headless. **Live webcam selftest passed
-(2026-10-03):** enroll 20/20 frames; 3/3 unlocks (similarity 0.96 / 0.94 / 0.84); wrong PIN and an impostor
-photo (similarity 0.05) rejected. One session, one lighting setup; other conditions not yet measured.
+**Not done, and why (read before picking these up):**
+- **Stage 2, the slide deck, and a visual restyle of `demo/app.py`** were each attempted with
+  Claude Code and stopped by Claude's safety filters. Plan for the team to do these by hand
+  rather than retrying them with Claude.
+- Optional Stage 1 item: single bidirectional prompt (`mode=mask|unmask`) — not done.
 
-**Not done:**
-- **Stage 2** (`KeyedFieldCodec`) — scaffold only.
-- Deck: rehearse it, and swap in a fresh demo screenshot/GIF of the restyled UI if wanted.
-- The deck generator (pptxgenjs) is not in the repo; edit `deck/PlainSight.pptx` directly in PowerPoint.
-
-### What changed in the second round
-- **Bidirectional codec** — `plainsight/prompts/bidirectional.py` + `codecs/bidi_prompt_codec.py`, registered as
-  `bidi` in the factory, CLI and eval. Unit test in `tests/test_prompt_codec.py`.
-- **Demo restyle** — dark theme, three cards (note / chat bubble / recovered note), keyword-scan chips on the
-  intercept, exact-detail chips on the receiver, codec switch, stats row. `sample_data.json` now holds **real
-  recorded model output** for both codecs (it used to be hand-written placeholders).
-- **Deck** — `deck/PlainSight.pptx`, built from the repo images (Ohio graphic and SVG seal left out).
-
-### What changed in the first round (summary of commits since `448cc44`)
+### What changed in this round (summary of commits since `448cc44`)
 - **Local model, no API key** — `plainsight/providers/ollama_provider.py` (stdlib HTTP, no new
   deps), registered in `providers/__init__.py`; `OLLAMA_HOST_URL` setting in `config.py`;
   `.env.example` defaults to `PLAINSIGHT_PROVIDER=ollama`, `PLAINSIGHT_MODEL=qwen2.5:7b`.
@@ -97,35 +81,12 @@ Ollama on Windows: `winget install Ollama.Ollama`, then `ollama pull qwen2.5:7b`
 
 ## Verify
 ```bash
-pytest -q                                        # 13 passed, 1 skipped (live Anthropic test)
+pytest -q                                        # 6 passed, 1 skipped (live Anthropic test)
 python -m evaluation.run_eval --codec mock       # must be 100% (harness self-test)
 python -m evaluation.run_eval --codec prompt     # real masking (Ollama running, or an Anthropic key)
-python -m evaluation.run_eval --codec bidi       # same, with the single bidirectional prompt
 python -m evaluation.run_eval --codec prompt --report out.json
 python -m evaluation.export_table out.json --md evaluation/results.md --csv evaluation/results.csv
 ```
-
-## Face key
-The shared key has to be identical for both partners, so a face cannot *be* that key. Instead your face
-unlocks a local vault (`.plainsight/face_vault.json`, git-ignored) that holds it, so a seized device gives
-up nothing without your face (and optional PIN).
-- **Vision:** OpenCV YuNet tracks the face and 5 landmarks; SFace turns the aligned face into a 128-d
-  embedding. Models download once into `models/` (git-ignored) and are SHA-256 pinned.
-- **Key:** a fuzzy commitment (`plainsight/biometric/fuzzy.py`) turns the noisy embedding into an exact
-  128-bit secret; scrypt(secret + PIN) → AES-256-GCM. No face image, embedding or template is stored.
-  Tuned in simulation: similarity ≥ 0.7 unlocks ~97%, ≤ 0.4 unlocks ~0%.
-- **Limits:** no liveness check (a good photo of you could unlock it); under coercion a face is easy to
-  compel, so set a PIN; repetition-code helper data leaks some bits; first-try unlock rate under different
-  lighting is not yet measured.
-```bash
-python -m plainsight.face_cli selftest [--impostor someone_else.jpg]   # live end-to-end check, throwaway vault
-python -m plainsight.face_cli track                                    # live landmark tracking, q to quit
-python -m plainsight.face_cli enroll --shared-key sprinthack-demo [--pin 1234]
-python -m plainsight.face_cli unlock --show | encrypt "text" | decrypt psf1:...
-python -m plainsight.cli mask "secret" --face --codec bidi              # shared key from the vault
-```
-In the demo app: sidebar → **Face key** → Enroll face / Unlock (live tracking view), then an
-encrypt/decrypt panel appears.
 
 ## Live demo
 ```bash
@@ -137,12 +98,11 @@ See `demo/README.md` for the full checklist.
 
 ## Repo layout (top level)
 ```
-plainsight/   the package (providers, codecs, prompts, key, config, cli, biometric/ face key, face_cli)
+plainsight/   the package (providers, codecs, prompts, key, config, cli)
 evaluation/   frozen cases, scorer, run_eval, export_table, latest results
 tests/        pytest (no network needed)
 demo/         Streamlit app, sample data, fallback GIF
 assets/       images for the deck
-deck/         PlainSight.pptx
 ```
 
 Fictional test data only. Defensive / anti-censorship PoC.

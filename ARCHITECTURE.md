@@ -39,7 +39,6 @@ Add a class, register it in the factory, done.
 | Provider  | `OllamaProvider`       | live   | local on-device model; no API key (current dev default) |
 | Provider  | `MockProvider`         | live   | canned output; unit-test plumbing only          |
 | Codec     | `PromptCodec`          | live   | Stage 1 — pure-LLM mask/unmask (the MVP)        |
-| Codec     | `BidiPromptCodec`      | live   | Stage 1 — ONE system prompt both ways; `MODE:` line in the user turn (`--codec bidi`) |
 | Codec     | `ReversibleMockCodec`  | live   | lossless; the harness's self-test               |
 | Codec     | `KeyedFieldCodec`      | scaffold | Stage 2 — deterministic fidelity layer        |
 
@@ -66,14 +65,6 @@ Add a class, register it in the factory, done.
 - **Neural linguistic steganography** (Meteor/Discop-style bit-level stego) → a
   `NeuralStegoCodec(Codec)` that needs a provider exposing token log-probs; add
   that capability to a provider subclass. Mention in the deck as "known alternative."
-
-## Face key (sits beside the seams, not in them)
-
-`plainsight/biometric/` never touches `Codec` or `LLMProvider`. It only decides *where the shared
-passphrase comes from*: `FaceVault.unlock(embeddings, pin).secrets["shared_key"]` feeds
-`SharedKey.from_passphrase`. Swap the face model in `face.py` or the error-correcting code in
-`fuzzy.py` without changing callers. Invariant: the vault file never holds a face image, embedding,
-or the secret itself; only helper data, salts and AES-GCM ciphertext.
 
 ## Data contract for the eval harness
 

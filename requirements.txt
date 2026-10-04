@@ -3,5 +3,3 @@ python-dotenv>=1.0.0
 pytest>=8.0.0
 # openai>=1.40.0        # uncomment if you add an OpenAIProvider
 streamlit>=1.37.0      # Stage 3 demo UI
-opencv-python>=4.8.0     # face key: YuNet landmarks + SFace embeddings
-cryptography>=42.0.0     # face key: AES-GCM vault

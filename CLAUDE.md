@@ -89,9 +89,7 @@ plainsight/
 ├── plainsight/          ← the package
 │   ├── config.py        ← settings from env (.env)
 │   ├── key.py           ← the shared secret / scheme (SharedKey)
-│   ├── cli.py           ← `python -m plainsight.cli mask|unmask` (`--face` pulls the key from the vault)
-│   ├── face_cli.py      ← `python -m plainsight.face_cli track|enroll|unlock|encrypt|decrypt|selftest`
-│   ├── biometric/       ← face key: YuNet+SFace (face.py), fuzzy commitment (fuzzy.py), AES vault (vault.py)
+│   ├── cli.py           ← `python -m plainsight.cli mask|unmask`
 │   ├── providers/       ← WHERE text comes from (swappable)
 │   │   ├── base.py          LLMProvider interface
 │   │   ├── anthropic_provider.py
@@ -100,19 +98,17 @@ plainsight/
 │   ├── codecs/          ← HOW masking works (swappable)
 │   │   ├── base.py          Codec interface
 │   │   ├── prompt_codec.py       Stage 1 — real LLM mask/unmask (MVP)
-│   │   ├── bidi_prompt_codec.py  Stage 1 — one bidirectional prompt (`--codec bidi`)
 │   │   ├── reversible_mock_codec.py  lossless test double for the harness
 │   │   ├── fields.py             deterministic field extract/pack (Stage 2 core)
 │   │   └── keyed_field_codec.py  Stage 2 — fidelity layer (scaffold + TODO)
-│   └── prompts/         ← encode/decode + bidirectional system prompts (edit these a lot)
+│   └── prompts/         ← encode/decode system prompts (edit these a lot)
 │       └── codebook.py      shared word-swap list both prompts use
 ├── evaluation/          ← the verification harness (our "does it work?" gate)
 │   ├── cases.json           frozen test cases incl. book-swap
 │   ├── score.py             field-recovery + benign-ness scoring
 │   └── run_eval.py          `python -m evaluation.run_eval`
 ├── tests/               ← pytest: plumbing + deterministic logic
-├── demo/                ← Stage 3 UI lives here (theme in .streamlit/config.toml)
-└── deck/                ← PlainSight.pptx, the pitch deck
+└── demo/                ← Stage 3 UI lives here
 ```
 
 ## The one design rule that makes the long-term features possible

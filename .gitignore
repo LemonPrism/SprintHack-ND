@@ -4,5 +4,3 @@ __pycache__/
 *.pyc
 .pytest_cache/
 out*.json
-models/
-.plainsight/
