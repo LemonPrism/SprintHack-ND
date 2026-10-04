@@ -1,0 +1,29 @@
+[
+  {
+    "id": "shahed-factory",
+    "recovery": 1.0,
+    "benign_ok": true,
+    "missing": [],
+    "leaked": [],
+    "cover": "Hey! Looking forward to the party and gift planning. Quick note ::PS::VGhlIFNoYWhlZCBkcm9uZSBmYWN0b3J5IGlzIGF0IDQ4LjQ2NDcgTiwgMzUuMDQ2MiBFLiBXb3JrZGF5IDA4MDAtMTcwMC4gUGxhbnQgbWFuYWdlciBpcyBWaWt0b3IgT3Jsb3YuIERlc3Ryb3kgaXQgU3VuZGF5Lg==::PS:: — talk soon!",
+    "recovered": "The Shahed drone factory is at 48.4647 N, 35.0462 E. Workday 0800-1700. Plant manager is Viktor Orlov. Destroy it Sunday."
+  },
+  {
+    "id": "extraction-meet",
+    "recovery": 1.0,
+    "benign_ok": true,
+    "missing": [],
+    "leaked": [],
+    "cover": "Hey! Looking forward to the party and gift planning. Quick note ::PS::RXh0cmFjdGlvbiBwb2ludCBpcyB0aGUgbm9ydGggZG9jay4gQmUgdGhlcmUgYXQgMjMwMCBvbiBGcmlkYXkuIEJyaW5nIHRoZSBkb2N1bWVudHMu::PS:: — talk soon!",
+    "recovered": "Extraction point is the north dock. Be there at 2300 on Friday. Bring the documents."
+  },
+  {
+    "id": "handler-report",
+    "recovery": 1.0,
+    "benign_ok": true,
+    "missing": [],
+    "leaked": [],
+    "cover": "Hey! Looking forward to the party and gift planning. Quick note ::PS::TmV3IGNoZWNrcG9pbnQgb24gSGlnaHdheSA3IG9wZW5lZCBNb25kYXkuIEd1YXJkcyByb3RhdGUgYXQgMDYwMCBhbmQgMTgwMC4gQXZvaWQgaXQu::PS:: — talk soon!",
+    "recovered": "New checkpoint on Highway 7 opened Monday. Guards rotate at 0600 and 1800. Avoid it."
+  }
+]
