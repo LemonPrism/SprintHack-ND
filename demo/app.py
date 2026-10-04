@@ -44,7 +44,7 @@ PROVIDERS = {
     "Claude (CLI, no API key)": ("claude-cli", "sonnet"),
     "Local 7B (Ollama)": ("ollama", "qwen2.5:7b"),
     "Grok (xAI API key)": ("grok", "grok-3"),
-    "Groq (free, Llama 3.3 70B)": ("groq", "llama-3.3-70b-versatile"),
+    "Groq (free, gpt-oss-120B)": ("groq", "openai/gpt-oss-120b"),
     "From .env": (None, None),
 }
 

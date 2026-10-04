@@ -29,7 +29,7 @@ _DEFAULT_MODELS = {
     "ollama": "qwen2.5:7b",
     "claude-cli": "sonnet",   # CLI model alias (e.g. opus / sonnet)
     "grok": "grok-3",         # confirm the current id at console.x.ai
-    "groq": "llama-3.3-70b-versatile",  # free open model; confirm id at console.groq.com
+    "groq": "openai/gpt-oss-120b",  # free open model; confirm id at console.groq.com
 }
 
 

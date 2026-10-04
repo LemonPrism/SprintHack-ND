@@ -17,7 +17,7 @@ from .base import LLMProvider
 
 
 class GroqProvider(LLMProvider):
-    def __init__(self, api_key: str, model: str = "llama-3.3-70b-versatile",
+    def __init__(self, api_key: str, model: str = "openai/gpt-oss-120b",
                  host: str = "https://api.groq.com/openai/v1", temperature: float = 0.0,
                  timeout: float = 120.0):
         if not api_key:
@@ -46,6 +46,9 @@ class GroqProvider(LLMProvider):
             headers={
                 "Content-Type": "application/json",
                 "Authorization": f"Bearer {self._key}",
+                # Cloudflare fronts the Groq API and 403s urllib's default UA
+                # ("error code: 1010"); a normal UA avoids the browser-signature ban.
+                "User-Agent": "PlainSight/0.1",
             },
         )
         try:
