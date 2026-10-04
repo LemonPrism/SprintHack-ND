@@ -153,6 +153,7 @@ def load_face_tracker():
 
 def face_capture(n: int) -> list:
     """Run the webcam with live landmark tracking until n clear frames are collected."""
+    import cv2
     from plainsight.biometric.face import Camera
     tracker = load_face_tracker()
     box = st.container(border=True)
@@ -162,7 +163,7 @@ def face_capture(n: int) -> list:
     view, bar = box.empty(), box.progress(0.0, text="Starting camera...")
 
     def on_frame(img, got, need):
-        view.image(img[:, :, ::-1], width=560)
+        view.image(cv2.cvtColor(img, cv2.COLOR_BGR2RGB), width=560)
         bar.progress(min(got / need, 1.0), text=f"{got}/{need} clear frames")
 
     with Camera() as cam:
