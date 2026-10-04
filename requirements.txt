@@ -1,5 +1,5 @@
 anthropic>=0.40.0
 python-dotenv>=1.0.0
 pytest>=8.0.0
+streamlit>=1.37.0       # Stage 3 demo UI (demo/app.py)
 # openai>=1.40.0        # uncomment if you add an OpenAIProvider
-# streamlit>=1.37.0     # uncomment for the Stage 3 demo UI

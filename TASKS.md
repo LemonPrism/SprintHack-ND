@@ -71,9 +71,9 @@ Show the before/after: `prompt` recovery vs `keyed` recovery on the same cases.
 Goal: three panes — **sender's real message / intercepted channel view / receiver's recovered message**.
 Making the adversary's view visible IS the pitch. Lives in `demo/`.
 
-- [ ] Minimal web UI (Streamlit, or a published HTML artifact calling the API) with the three panes
-- [ ] Theme/persona dropdown wired to `--theme`
-- [ ] A "what the FSB sees" panel that shows only the benign text
+- [x] Minimal web UI (Streamlit, `demo/app.py`) with the three panes
+- [x] Theme/persona dropdown wired to the cover theme
+- [x] A "what the open channel sees" panel showing only the benign cover (plus a live wrong-key demo)
 - [ ] Record a 60–90s screen capture as a live-demo fallback
 
 **Acceptance check**: a teammate who has never seen it can run the demo and narrate the three panes unaided.
