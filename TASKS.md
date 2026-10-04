@@ -118,7 +118,7 @@ Each maps to an extension point in `ARCHITECTURE.md`. Build order is rough.
 - [ ] **Image / photo carriers** — a `Codec` whose cover is an image caption or an image
 - [ ] **Key separation / seized-model safety** — model alone cannot decode without the key
 - [~] **Face-locked key vault** — `plainsight/biometric/` + `face_cli`: face (+PIN) unlocks the shared key on
-  the device. Built and tested offline; live webcam check pending (`python -m plainsight.face_cli selftest`).
+  the device. Live webcam selftest passed (3/3 unlocks, impostor rejected); `python -m plainsight.face_cli selftest`.
   Next: liveness check (blink / head turn), BCH instead of repetition code, measure real unlock rates.
 - [ ] **Per-user model diversity** — distinct small models so one seizure ≠ global compromise
 - [ ] **Robust adversarial testing** — active-warden paraphrase/normalization survival

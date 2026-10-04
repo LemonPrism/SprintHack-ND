@@ -33,8 +33,9 @@ DIU "AI-Enhanced Resilient Communications" track, SprintHack@ND 2026.
 
 **Face key (new, optional)** — your face unlocks a local encrypted vault that holds the shared key, and can
 encrypt/decrypt text. See "Face key" below. Verified on unit tests, on a real face photo (detection,
-landmarks, enroll/unlock, wrong PIN) and in the demo app headless. **Not yet run live on the webcam:** do
-`python -m plainsight.face_cli selftest` before relying on it.
+landmarks, enroll/unlock, wrong PIN) and in the demo app headless. **Live webcam selftest passed
+(2026-10-03):** enroll 20/20 frames; 3/3 unlocks (similarity 0.96 / 0.94 / 0.84); wrong PIN and an impostor
+photo (similarity 0.05) rejected. One session, one lighting setup; other conditions not yet measured.
 
 **Not done:**
 - **Stage 2** (`KeyedFieldCodec`) — scaffold only.
