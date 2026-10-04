@@ -24,6 +24,13 @@ def get_provider(settings=None) -> LLMProvider:
     if name == "claude-cli":
         from .claude_cli_provider import ClaudeCliProvider
         return ClaudeCliProvider(model=settings.model, binary=settings.claude_bin)
+    if name == "grok":
+        from .grok_provider import GrokProvider
+        return GrokProvider(
+            api_key=settings.xai_api_key,
+            model=settings.model,
+            temperature=settings.temperature,
+        )
     if name == "ollama":
         from .ollama_provider import OllamaProvider
         return OllamaProvider(

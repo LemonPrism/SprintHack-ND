@@ -43,6 +43,7 @@ THEMES = [
 PROVIDERS = {
     "Claude (CLI, no API key)": ("claude-cli", "sonnet"),
     "Local 7B (Ollama)": ("ollama", "qwen2.5:7b"),
+    "Grok (xAI API key)": ("grok", "grok-3"),
     "From .env": (None, None),
 }
 
