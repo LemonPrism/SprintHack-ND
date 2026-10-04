@@ -31,6 +31,13 @@ def get_provider(settings=None) -> LLMProvider:
             model=settings.model,
             temperature=settings.temperature,
         )
+    if name == "groq":
+        from .groq_provider import GroqProvider
+        return GroqProvider(
+            api_key=settings.groq_api_key,
+            model=settings.model,
+            temperature=settings.temperature,
+        )
     if name == "ollama":
         from .ollama_provider import OllamaProvider
         return OllamaProvider(
